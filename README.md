@@ -3,9 +3,13 @@
 Using XSD validating and MTOM simultaneously does not work.
 
 ## Reference
-> In order to avoid the error, the xop includes should be resolved before invoking the XML validation.
 
-[source](http://stackoverflow.com/questions/11361689/java-xml-validation-and-mtom)
+* [stackoverflow.com](http://stackoverflow.com/questions/11361689/java-xml-validation-and-mtom)
+* [java.net](https://java.net/projects/jax-ws/lists/users/archive/2007-06/message/41)
+* [SAP](https://scn.sap.com/thread/3204185)
+* [CXF-5237](https://issues.apache.org/jira/browse/CXF-5237)
+* [JBOSS](https://issues.jboss.org/browse/JBPAPP-10859)
+* [workaround for server](http://forum.spring.io/forum/spring-projects/web-services/31684-mtom-and-xml-validation)
 
 ## Log
     Kvě 17, 2016 9:39:35 DOP. org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
