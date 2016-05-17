@@ -1,6 +1,11 @@
 # Spring WS Client: XSD validation and MTOM
 
+Using XSD validating and MTOM simultaneously does not work.
 
+## Reference
+> In order to avoid the error, the xop includes should be resolved before invoking the XML validation.
+
+[source](http://stackoverflow.com/questions/11361689/java-xml-validation-and-mtom)
 
 ## Log
     Kvě 17, 2016 9:39:35 DOP. org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
