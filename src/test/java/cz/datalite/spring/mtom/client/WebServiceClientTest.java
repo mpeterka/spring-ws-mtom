@@ -17,7 +17,20 @@ public class WebServiceClientTest {
 	WebServiceClient webServiceClient;
 
 	@org.junit.Test
-	public void testSimpleSendAndReceive() throws Exception {
-		Object result = webServiceClient.sendMtom("file.bin", "file content".getBytes());
+	public void testMarshall() throws Exception {
+		Object result = webServiceClient.sendMarshal("file.bin", "file content".getBytes());
+	}
+
+	/**
+	 * Plain XML, no MTOM transform?
+	 * @throws Exception
+	 */
+	@org.junit.Test
+	public void testPlain() throws Exception {
+		String message = "<ns:file xmlns:ns=\"http://datalite.cz/spring/mtom-message/1.0\">\n" +
+				"  <ns:filename>filename</ns:filename>\n" +
+				"  <ns:content>ZQ==</ns:content>\n" +
+				"</ns:file>";
+		Object result = webServiceClient.sendPlain(message);
 	}
 }
