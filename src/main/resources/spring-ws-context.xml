@@ -6,7 +6,7 @@
 
 	<!-- WS -->
 	<bean id="webServiceClient" class="cz.datalite.spring.mtom.client.WebServiceClient">
-		<property name="defaultUri" value="http://kukatko.apl.ct.cz:3333/cipisek/ws/soap"/>
+		<property name="defaultUri" value="http://localhost:3333/"/>
 		<property name="marshaller" ref="jaxb2Marshaller" />
 	</bean>
 

@@ -6,12 +6,14 @@
 
 	<groupId>cz.datalite.spm</groupId>
 	<artifactId>spring-ws-mtom</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.1-SNAPSHOT</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<org.springframwork.version>4.2.6.RELEASE</org.springframwork.version>
-		<org.springframwork.ws.version>2.3.0.RELEASE</org.springframwork.ws.version>
+		<org.springframwork.version>5.3.5</org.springframwork.version>
+		<org.springframwork.ws.version>3.0.10.RELEASE</org.springframwork.ws.version>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
 	</properties>
 
 	<dependencies>
@@ -42,14 +44,27 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>3.2.6.RELEASE</version>
+			<version>${org.springframwork.version}</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
+			<version>4.13.2</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>4.9.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>mockwebserver</artifactId>
+			<version>4.9.1</version>
 			<scope>test</scope>
 		</dependency>
 

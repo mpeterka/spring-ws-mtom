@@ -1,61 +1,84 @@
 package cz.datalite.spring.mtom.client;
 
 import cz.datalite.spring.mtom.model.File;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.oxm.Marshaller;
 import org.springframework.ws.client.core.SourceExtractor;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.xml.transform.StringSource;
 
 import javax.xml.transform.Source;
-import javax.xml.transform.TransformerException;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import java.io.StringWriter;
+
+import static javax.xml.XMLConstants.ACCESS_EXTERNAL_DTD;
+import static javax.xml.XMLConstants.ACCESS_EXTERNAL_STYLESHEET;
+import static javax.xml.transform.OutputKeys.ENCODING;
+import static javax.xml.transform.OutputKeys.INDENT;
+import static javax.xml.transform.OutputKeys.METHOD;
+import static javax.xml.transform.OutputKeys.OMIT_XML_DECLARATION;
 
 public class WebServiceClient {
 
-	private final WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
+    private final WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
 
-	@Autowired
-	Jaxb2Marshaller jaxb2Marshaller;
+    private final Log logger = LogFactory.getLog(WebServiceClient.class);
 
-	public void setDefaultUri(String defaultUri) {
-		webServiceTemplate.setDefaultUri(defaultUri);
-	}
+    public void setDefaultUri(String defaultUri) {
+        webServiceTemplate.setDefaultUri(defaultUri);
+    }
 
-	public void setMarshaller(org.springframework.oxm.Marshaller marshaller) {
-		webServiceTemplate.setMarshaller(marshaller);
-	}
+    public void setMarshaller(Marshaller marshaller) {
+        webServiceTemplate.setMarshaller(marshaller);
+    }
 
-	public Object sendMarshal(String filename, byte[] content) throws UnsupportedEncodingException {
+    public Object sendMarshal(String filename, byte[] content) {
 
-		File message = createMessage(filename, content);
+        File message = createMessage(filename, content);
 
-		Object result = webServiceTemplate.marshalSendAndReceive(message);
+        Object result = webServiceTemplate.marshalSendAndReceive(message);
 
-		System.out.printf("Result: %s%n", result);
+        logger.debug("Result: %s%n" + result);
 
-		return result;
-	}
+        return result;
+    }
 
-	public Object sendPlain(String xml) throws UnsupportedEncodingException {
+    public String sendPlain(String xml) {
 
-		Object result = webServiceTemplate.sendSourceAndReceive(new StringSource(xml), new SourceExtractor<Object>() {
-			public Object extractData(Source source) throws IOException, TransformerException {
-				return "ok: " + source;
-			}
-		});
+        String result = webServiceTemplate.sendSourceAndReceive(new StringSource(xml), new StringSourceExtractor());
 
-		System.out.printf("Result: %s%n", result);
-
-		return result;
-	}
+        logger.debug("Result: %s%n" + result);
+        return result;
+    }
 
 
-	protected File createMessage(String filename, byte[] content) {
-		File message = new File();
-		message.setFilename(filename);
-		message.setContent(content);
-		return message;
-	}
+    protected File createMessage(String filename, byte[] content) {
+        File message = new File();
+        message.setFilename(filename);
+        message.setContent(content);
+        return message;
+    }
+
+    private static class StringSourceExtractor implements SourceExtractor<String> {
+        public String extractData(Source source) {
+            try {
+                TransformerFactory tf = TransformerFactory.newInstance();
+                tf.setAttribute(ACCESS_EXTERNAL_DTD, "");
+                tf.setAttribute(ACCESS_EXTERNAL_STYLESHEET, "");
+                Transformer transformer = tf.newTransformer();
+                transformer.setOutputProperty(OMIT_XML_DECLARATION, "no");
+                transformer.setOutputProperty(METHOD, "xml");
+                transformer.setOutputProperty(INDENT, "yes");
+                transformer.setOutputProperty(ENCODING, "UTF-8");
+                StringWriter sw = new StringWriter();
+                transformer.transform(source, new StreamResult(sw));
+                return sw.toString();
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
+        }
+    }
 }

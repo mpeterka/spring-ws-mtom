@@ -1,9 +1,24 @@
 package cz.datalite.spring.mtom.client;
 
+import okhttp3.mockwebserver.Dispatcher;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.jetbrains.annotations.NotNull;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.io.IOException;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for {@link WebServiceClient}
@@ -12,25 +27,55 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations = {"classpath:spring-ws-context.xml"})
 public class WebServiceClientTest {
 
+    private final static Log logger = LogFactory.getLog(WebServiceClientTest.class);
 
-	@Autowired
-	WebServiceClient webServiceClient;
+    @Autowired
+    WebServiceClient webServiceClient;
 
-	@org.junit.Test
-	public void testMarshall() throws Exception {
-		Object result = webServiceClient.sendMarshal("file.bin", "file content".getBytes());
-	}
+    private MockWebServer mockWebServer;
 
-	/**
-	 * Plain XML, no MTOM transform?
-	 * @throws Exception
-	 */
-	@org.junit.Test
-	public void testPlain() throws Exception {
-		String message = "<ns:file xmlns:ns=\"http://datalite.cz/spring/mtom-message/1.0\">\n" +
-				"  <ns:filename>filename</ns:filename>\n" +
-				"  <ns:content>ZQ==</ns:content>\n" +
-				"</ns:file>";
-		Object result = webServiceClient.sendPlain(message);
-	}
+    @Before
+    public void setup() throws IOException {
+        mockWebServer = new MockWebServer();
+        mockWebServer.start(3333);
+        mockWebServer.setDispatcher(new EchoDispatcher());
+        logger.info("Started " + mockWebServer);
+    }
+
+    @After
+    public void tearDown() throws IOException {
+        mockWebServer.close();
+    }
+
+    /**
+     * This test is failing because of MTOM
+     */
+    @Test
+    public void testMarshallMtom() {
+        Object result = webServiceClient.sendMarshal("file.bin", "file content".getBytes());
+        assertNotNull(result);
+    }
+
+    /**
+     * Plain XML, no MTOM transform?
+     */
+    @Test
+    public void testPlain() {
+        String message = "<ns:file xmlns:ns=\"http://datalite.cz/spring/mtom-message/1.0\">\n" +
+                "  <ns:filename>filename</ns:filename>\n" +
+                "  <ns:content>ZQ==</ns:content>\n" +
+                "</ns:file>";
+        String result = webServiceClient.sendPlain(message);
+        assertTrue(result, result.contains("ZQ=="));
+    }
+
+    private static class EchoDispatcher extends Dispatcher {
+        @NotNull
+        @Override
+        public MockResponse dispatch(@NotNull RecordedRequest recordedRequest) {
+            return new MockResponse()
+                    .setResponseCode(200)
+                    .setBody(recordedRequest.getBody());
+        }
+    }
 }
