@@ -61,10 +61,11 @@ public class WebServiceClientTest {
      */
     @Test
     public void testPlain() {
-        String message = "<ns:file xmlns:ns=\"http://datalite.cz/spring/mtom-message/1.0\">\n" +
-                "  <ns:filename>filename</ns:filename>\n" +
-                "  <ns:content>ZQ==</ns:content>\n" +
-                "</ns:file>";
+        String message = """
+                <ns:file xmlns:ns="http://datalite.cz/spring/mtom-message/1.0">
+                  <ns:filename>filename</ns:filename>
+                  <ns:content>ZQ==</ns:content>
+                </ns:file>""";
         String result = webServiceClient.sendPlain(message);
         assertTrue(result, result.contains("ZQ=="));
     }

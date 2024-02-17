@@ -22,34 +22,24 @@ import static javax.xml.transform.OutputKeys.METHOD;
 import static javax.xml.transform.OutputKeys.OMIT_XML_DECLARATION;
 
 public class WebServiceClient {
+    private final Log logger = LogFactory.getLog(WebServiceClient.class);
 
     private final WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
 
-    private final Log logger = LogFactory.getLog(WebServiceClient.class);
-
-    public void setDefaultUri(String defaultUri) {
+    public WebServiceClient(String defaultUri, Marshaller marshaller) {
         webServiceTemplate.setDefaultUri(defaultUri);
-    }
-
-    public void setMarshaller(Marshaller marshaller) {
         webServiceTemplate.setMarshaller(marshaller);
     }
 
     public Object sendMarshal(String filename, byte[] content) {
-
-        File message = createMessage(filename, content);
-
-        Object result = webServiceTemplate.marshalSendAndReceive(message);
-
+        final File message = createMessage(filename, content);
+        final Object result = webServiceTemplate.marshalSendAndReceive(message);
         logger.debug("Result: %s%n" + result);
-
         return result;
     }
 
     public String sendPlain(String xml) {
-
         String result = webServiceTemplate.sendSourceAndReceive(new StringSource(xml), new StringSourceExtractor());
-
         logger.debug("Result: %s%n" + result);
         return result;
     }

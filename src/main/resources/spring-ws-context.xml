@@ -6,8 +6,8 @@
 
 	<!-- WS -->
 	<bean id="webServiceClient" class="cz.datalite.spring.mtom.client.WebServiceClient">
-		<property name="defaultUri" value="http://localhost:3333/"/>
-		<property name="marshaller" ref="jaxb2Marshaller" />
+		<constructor-arg value="http://localhost:3333/" />
+		<constructor-arg ref="jaxb2Marshaller" />
 	</bean>
 
 	<!-- XML -->
@@ -38,5 +38,4 @@
 			</list>
 		</property>
 	</bean>
-
 </beans>
