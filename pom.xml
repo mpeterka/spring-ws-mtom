@@ -11,7 +11,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<org.springframework.version>6.1.8</org.springframework.version>
-		<org.springframework.ws.version>4.0.10</org.springframework.ws.version>
+		<org.springframework.ws.version>4.0.11</org.springframework.ws.version>
 		<maven.compiler.target>17</maven.compiler.target>
 		<maven.compiler.source>17</maven.compiler.source>
 	</properties>
