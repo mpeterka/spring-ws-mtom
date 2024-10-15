@@ -3,7 +3,8 @@
 Using XSD validating and MTOM simultaneously does not work.
 
 ## Bug report
-* [SWS-958: Soap MTOM: mtomEnabled=true and XSD schemas=... fails](https://jira.spring.io/browse/SWS-958)
+* ~~[SWS-958: Soap MTOM: mtomEnabled=true and XSD schemas=... fails](https://jira.spring.io/browse/SWS-958)~~
+  * [Issue #1030](https://github.com/spring-projects/spring-ws/issues/1030)
 * [SPM-414: internal project bug report](http://jira.datalite.cz/browse/SPM-414) (no public access)
 
 ## References
