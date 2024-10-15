@@ -12,12 +12,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -27,7 +27,7 @@ import static org.junit.Assert.assertTrue;
 @ContextConfiguration(locations = {"classpath:spring-ws-context.xml"})
 public class WebServiceClientTest {
 
-    private final static Log logger = LogFactory.getLog(WebServiceClientTest.class);
+    private static final Log logger = LogFactory.getLog(WebServiceClientTest.class);
 
     @Autowired
     WebServiceClient webServiceClient;
@@ -48,12 +48,13 @@ public class WebServiceClientTest {
     }
 
     /**
-     * This test is failing because of MTOM
+     * This method throws exception because of MTOM.
+     * <p>
+     * This is the proof that there is an error.
      */
-    @Test
+    @Test(expected = org.springframework.oxm.MarshallingFailureException.class)
     public void testMarshallMtom() {
-        Object result = webServiceClient.sendMarshal("file.bin", "file content".getBytes());
-        assertNotNull(result);
+        webServiceClient.sendMarshal("file.bin", "file content".getBytes());
     }
 
     /**
@@ -75,7 +76,7 @@ public class WebServiceClientTest {
         @Override
         public MockResponse dispatch(@NotNull RecordedRequest recordedRequest) {
             return new MockResponse()
-                    .setResponseCode(200)
+                    .setResponseCode(HttpStatus.OK.value())
                     .setBody(recordedRequest.getBody());
         }
     }
