@@ -10,7 +10,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<org.springframework.version>6.1.13</org.springframework.version>
+		<org.springframework.version>6.1.14</org.springframework.version>
 		<org.springframework.ws.version>4.0.11</org.springframework.ws.version>
 		<maven.compiler.target>17</maven.compiler.target>
 		<maven.compiler.source>17</maven.compiler.source>
