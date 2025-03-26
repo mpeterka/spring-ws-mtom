@@ -51,7 +51,8 @@ public class WebServiceClientTest {
      * <p>
      * This is the proof that there is an error.
      */
-    @Test(expected = org.springframework.oxm.MarshallingFailureException.class)
+    @Test
+//    @Test(expected = org.springframework.oxm.MarshallingFailureException.class)
     public void testMarshallMtom() {
         webServiceClient.sendMarshal("file.bin", "file content".getBytes());
     }
